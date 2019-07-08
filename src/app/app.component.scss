@@ -1,0 +1,36 @@
+:host {
+    margin-bottom: 10em;
+
+}
+
+table:not(.table-clear) {
+
+    tr td {
+        border: 1px solid;
+        padding: 1em;
+    }
+
+    tr th {
+        padding: 1em;
+    }
+}
+
+.table-clear {
+
+    tr {
+
+        td:first-child {
+            text-align: right;
+        }
+
+        td:last-child {
+            text-align: left;
+            font-weight: bold;
+        }
+
+        td {
+            padding: .5em 1em;
+        }
+    }
+
+}

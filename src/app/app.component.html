@@ -1,0 +1,202 @@
+<div *ngIf="!rawMatrix" class="text-center mt-5">
+
+    <h4>Escolha um arquivo com a matriz do grafo</h4>
+
+    <br>
+
+    <input type="file" (change)="change($event)">
+
+    <br>
+    <br>
+    <br>
+
+    <button mat-raised-button (click)="submit()">Enviar</button>
+</div>
+
+<div *ngIf="rawMatrix" class="m-3 mt-5 row">
+
+    <div class="col">
+        <h1 class="text-center mb-4">Teoria dos Grafos</h1>
+
+        <table class="table-clear">
+            <tr>
+                <td>Ordem do grafo</td>
+                <td>{{ vertices?.length }}</td>
+            </tr>
+            <tr>
+                <td>Tamanho do grafo</td>
+                <td>{{ edges?.length }}</td>
+            </tr>
+            <tr>
+                <td>Matriz de adjacências:</td>
+                <td>Implementado</td>
+            </tr>
+            <tr>
+                <td>Matriz de incidências:</td>
+                <td>Implementado</td>
+            </tr>
+            <tr>
+                <td>Grau dos vertice:</td>
+                <td>Implementado</td>
+            </tr>
+            <tr>
+                <td>Fecho transitivo do vertice:</td>
+                <td>Implementado</td>
+            </tr>
+            <tr>
+                <td>Fecho transitivo do grafo:</td>
+                <td>Implementado</td>
+            </tr>
+            <tr>
+                <td>É grafo regular:</td>
+                <td>{{ regular ? 'Sim' : 'Não'}}</td>
+            </tr>
+            <tr>
+                <td>É grafo simples:</td>
+                <td>{{ simple ? 'Sim' : 'Não'}}</td>
+            </tr>
+            <tr>
+                <td>É pseudografo:</td>
+                <td>{{ pseudograph ? 'Sim' : 'Não'}}</td>
+            </tr>
+            <tr>
+                <td>É multigrafo:</td>
+                <td>{{ multigraph ? 'Sim' : 'Não'}}</td>
+            </tr>
+            <tr>
+                <td>É grafo conexo:</td>
+                <td>{{ connected ? 'Sim' : 'Não'}}</td>
+            </tr>
+            <tr>
+                <td>É grafo completo:</td>
+                <td>{{ complete ? 'Sim' : 'Não'}}</td>
+            </tr>
+            <tr>
+                <td>É grafo ciclo:</td>
+                <td>{{ cycle ? 'Sim' : 'Não'}}</td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="col text-center">
+        <h4>Entrada</h4>
+
+        <pre>{{ rawMatrix }}</pre>
+
+        <br>
+
+        <h4>Grau dos vértice</h4>
+
+        <div class="d-flex justify-content-center">
+            <table>
+                <tr>
+                    <th *ngFor="let vertex of vertices">{{ vertex.name }}</th>
+                </tr>
+                <tr>
+                    <td *ngFor="let vertex of vertices">{{ vertex.degree }}</td>
+                </tr>
+            </table>
+        </div>
+
+        <br>
+        <br>
+
+        <h4>Fecho transitivo do vértice</h4>
+
+        <div class="d-flex justify-content-center">
+            <table class="table-clear">
+                <tr *ngFor="let vertex of vertices; index as i">
+                    <td>{{ vertex.name }}</td>
+                    <td>
+                        {{ '{' }}
+                        <span *ngFor="let col of transitiveClosures[i]; index as j">
+                            <ng-container *ngIf="col">
+                                {{ vertices[j].name }}
+                            </ng-container>
+                        </span>
+                        {{ '}' }}
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="col text-center">
+        <h4>Matriz Adjacência</h4>
+
+        <div class="d-flex justify-content-center">
+            <table>
+                <tr>
+                    <th></th>
+                    <th *ngFor="let vertex of vertices">{{ vertex.name }}</th>
+                </tr>
+                <tr *ngFor="let vertex of vertices">
+                    <th>{{ vertex.name }}</th>
+                    <td *ngFor="let aux of vertices; index as i">{{ vertex.isAdjacent(aux) ? '✔️' : '' }}</td>
+                </tr>
+            </table>
+        </div>
+
+        <br>
+        <br>
+
+        <h4>Fecho transitivo do grafo</h4>
+
+        <div class="d-flex justify-content-center">
+            <table>
+                <tr>
+                    <th></th>
+                    <th *ngFor="let vertex of vertices">{{ vertex.name }}</th>
+                </tr>
+                <tr *ngFor="let row of transitiveMatrix; index as i">
+                    <th>{{ vertices[i].name }}</th>
+                    <td *ngFor="let col of row; index as j">{{ col }}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+
+    <div class="col text-center">
+        <h4>Matriz Incidência</h4>
+
+        <div class="d-flex justify-content-center">
+            <table>
+                <tr>
+                    <th></th>
+                    <th *ngFor="let vertex of vertices">{{ vertex.name }}</th>
+                </tr>
+                <tr *ngFor="let edge of edges; index as i">
+                    <th>L<sub>{{ i + 1 }}</sub></th>
+                    <td *ngFor="let aux of vertices">
+                        <ng-template
+                            [ngIf]="edge.left.name !== edge.right.name && (aux.name === edge.left.name || aux.name === edge.right.name)">
+                            1</ng-template>
+                        <ng-template [ngIf]="edge.left.name === edge.right.name && aux.name === edge.left.name">2
+                        </ng-template>
+                    </td>
+                    <th>{{ edge.weight }}</th>
+                </tr>
+            </table>
+        </div>
+
+        <br>
+        <br>
+
+        <h4>Matriz de distâncias</h4>
+
+        <div class="d-flex justify-content-center">
+            <table>
+                <tr>
+                    <th></th>
+                    <th *ngFor="let vertex of vertices">{{ vertex.name }}</th>
+                </tr>
+                <tr *ngFor="let vertex of vertices">
+                    <th>{{ vertex.name }}</th>
+                    <!-- '✔️' -->
+                    <td *ngFor="let aux of vertices; index as i">{{ vertex.distances[aux.name] }}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>

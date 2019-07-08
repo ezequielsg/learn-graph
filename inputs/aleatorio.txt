@@ -1,0 +1,8 @@
+a / b
+a / d
+b / c
+b / d
+c / c
+c / d
+d / a
+c / d
