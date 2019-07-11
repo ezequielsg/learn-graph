@@ -5,21 +5,31 @@ export default class Edge {
         public left: Vertex,
         public right: Vertex,
         public weight: number
-    ) {
-        left.degree++;
-        right.degree++;
+    ) { }
 
-        left.edges.push(this);
-        right.edges.push(this);
-
-        left.distances[left.name] = 0;
-        left.distances[right.name] = +weight;
-
-        right.distances[right.name] = 0;
-        right.distances[left.name] = +weight;
+    isParallel(edge: Edge) {
+        return edge.left === this.left && edge.right === this.right;
     }
 
-    adjacent(vertex: Vertex) {
-        return this.left.name === vertex.name ? this.right : this.left;
+    isBetween(from: Vertex, to: Vertex) {
+        return this.isAdjacent(from) && this.isAdjacent(to);
+    }
+
+    isAdjacent(vertex: Vertex) {
+        return this.left === vertex || this.right === vertex;
+    }
+
+    isLoop() {
+        return this.left === this.right;
+    }
+
+    getAdjacentVertex(vertex: Vertex) {
+        if (this.left === vertex) {
+            return this.right;
+        } else if (this.right === vertex) {
+            return this.left;
+        } else {
+            return null;
+        }
     }
 }

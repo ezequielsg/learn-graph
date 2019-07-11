@@ -21,11 +21,11 @@
         <table class="table-clear">
             <tr>
                 <td>Ordem do grafo</td>
-                <td>{{ vertices?.length }}</td>
+                <td>{{ graph.getOrder() }}</td>
             </tr>
             <tr>
                 <td>Tamanho do grafo</td>
-                <td>{{ edges?.length }}</td>
+                <td>{{ graph.getLength() }}</td>
             </tr>
             <tr>
                 <td>Matriz de adjacências:</td>
@@ -49,31 +49,31 @@
             </tr>
             <tr>
                 <td>É grafo regular:</td>
-                <td>{{ regular ? 'Sim' : 'Não'}}</td>
+                <td>{{ graph.isRegular() ? 'Sim' : 'Não'}}</td>
             </tr>
             <tr>
                 <td>É grafo simples:</td>
-                <td>{{ simple ? 'Sim' : 'Não'}}</td>
+                <td>{{ graph.isSimple() ? 'Sim' : 'Não'}}</td>
             </tr>
             <tr>
                 <td>É pseudografo:</td>
-                <td>{{ pseudograph ? 'Sim' : 'Não'}}</td>
+                <td>{{ graph.isPseudograph() ? 'Sim' : 'Não'}}</td>
             </tr>
             <tr>
                 <td>É multigrafo:</td>
-                <td>{{ multigraph ? 'Sim' : 'Não'}}</td>
+                <td>{{ graph.isMultigraph() ? 'Sim' : 'Não'}}</td>
             </tr>
             <tr>
                 <td>É grafo conexo:</td>
-                <td>{{ connected ? 'Sim' : 'Não'}}</td>
+                <td>{{ graph.isConnected() ? 'Sim' : 'Não'}}</td>
             </tr>
             <tr>
                 <td>É grafo completo:</td>
-                <td>{{ complete ? 'Sim' : 'Não'}}</td>
+                <td>{{ graph.isComplete() ? 'Sim' : 'Não'}}</td>
             </tr>
             <tr>
                 <td>É grafo ciclo:</td>
-                <td>{{ cycle ? 'Sim' : 'Não'}}</td>
+                <td>{{ graph.isCycle() ? 'Sim' : 'Não'}}</td>
             </tr>
         </table>
     </div>
@@ -90,10 +90,10 @@
         <div class="d-flex justify-content-center">
             <table>
                 <tr>
-                    <th *ngFor="let vertex of vertices">{{ vertex.name }}</th>
+                    <th *ngFor="let vertex of graph.vertices">{{ vertex.name }}</th>
                 </tr>
                 <tr>
-                    <td *ngFor="let vertex of vertices">{{ vertex.degree }}</td>
+                    <td *ngFor="let vertex of graph.vertices">{{ graph.getDegree(vertex) }}</td>
                 </tr>
             </table>
         </div>
@@ -104,18 +104,42 @@
         <h4>Fecho transitivo do vértice</h4>
 
         <div class="d-flex justify-content-center">
-            <table class="table-clear">
-                <tr *ngFor="let vertex of vertices; index as i">
+            <table class="table-clear" *ngIf="graph.getTransitiveClosures() as closures">
+                <tr *ngFor="let vertex of graph.vertices; index as i">
                     <td>{{ vertex.name }}</td>
                     <td>
                         {{ '{' }}
-                        <span *ngFor="let col of transitiveClosures[i]; index as j">
+                        <span *ngFor="let col of closures[i]; index as j">
                             <ng-container *ngIf="col">
-                                {{ vertices[j].name }}
+                                {{ graph.vertices[j].name }}
                             </ng-container>
                         </span>
                         {{ '}' }}
                     </td>
+                </tr>
+            </table>
+        </div>
+
+        <br>
+        <br>
+
+        <h4>Árvore Geradora Mínima</h4>
+
+        <div class="d-flex justify-content-center">
+            <table *ngIf="graph.getMinimumSpanningTree() as tree">
+                <tr>
+                    <th></th>
+                    <th *ngFor="let vertex of tree.vertices">{{ vertex.name }}</th>
+                </tr>
+                <tr *ngFor="let edge of tree.edges; index as i">
+                    <th>L<sub>{{ i + 1 }}</sub></th>
+                    <td *ngFor="let aux of tree.vertices">
+                        <ng-template [ngIf]="!edge.isLoop() && edge.isAdjacent(aux)">
+                            1</ng-template>
+                        <ng-template [ngIf]="edge.isLoop() && edge.isAdjacent(aux)">2
+                        </ng-template>
+                    </td>
+                    <th>{{ edge.weight }}</th>
                 </tr>
             </table>
         </div>
@@ -128,11 +152,12 @@
             <table>
                 <tr>
                     <th></th>
-                    <th *ngFor="let vertex of vertices">{{ vertex.name }}</th>
+                    <th *ngFor="let vertex of graph.vertices">{{ vertex.name }}</th>
                 </tr>
-                <tr *ngFor="let vertex of vertices">
+                <tr *ngFor="let vertex of graph.vertices">
                     <th>{{ vertex.name }}</th>
-                    <td *ngFor="let aux of vertices; index as i">{{ vertex.isAdjacent(aux) ? '✔️' : '' }}</td>
+                    <td *ngFor="let aux of graph.vertices; index as i">{{ graph.isAdjacent(vertex, aux) ? '✔️' : '' }}
+                    </td>
                 </tr>
             </table>
         </div>
@@ -143,13 +168,13 @@
         <h4>Fecho transitivo do grafo</h4>
 
         <div class="d-flex justify-content-center">
-            <table>
+            <table *ngIf="graph.getTransitiveMatrix() as matrix">
                 <tr>
                     <th></th>
-                    <th *ngFor="let vertex of vertices">{{ vertex.name }}</th>
+                    <th *ngFor="let vertex of graph.vertices">{{ vertex.name }}</th>
                 </tr>
-                <tr *ngFor="let row of transitiveMatrix; index as i">
-                    <th>{{ vertices[i].name }}</th>
+                <tr *ngFor="let row of matrix; index as i">
+                    <th>{{ graph.vertices[i].name }}</th>
                     <td *ngFor="let col of row; index as j">{{ col }}</td>
                 </tr>
             </table>
@@ -164,11 +189,11 @@
             <table>
                 <tr>
                     <th></th>
-                    <th *ngFor="let vertex of vertices">{{ vertex.name }}</th>
+                    <th *ngFor="let vertex of graph.vertices">{{ vertex.name }}</th>
                 </tr>
-                <tr *ngFor="let edge of edges; index as i">
+                <tr *ngFor="let edge of graph.edges; index as i">
                     <th>L<sub>{{ i + 1 }}</sub></th>
-                    <td *ngFor="let aux of vertices">
+                    <td *ngFor="let aux of graph.vertices">
                         <ng-template
                             [ngIf]="edge.left.name !== edge.right.name && (aux.name === edge.left.name || aux.name === edge.right.name)">
                             1</ng-template>
@@ -189,12 +214,11 @@
             <table>
                 <tr>
                     <th></th>
-                    <th *ngFor="let vertex of vertices">{{ vertex.name }}</th>
+                    <th *ngFor="let vertex of graph.vertices">{{ vertex.name }}</th>
                 </tr>
-                <tr *ngFor="let vertex of vertices">
+                <tr *ngFor="let vertex of graph.vertices">
                     <th>{{ vertex.name }}</th>
-                    <!-- '✔️' -->
-                    <td *ngFor="let aux of vertices; index as i">{{ vertex.distances[aux.name] }}</td>
+                    <td *ngFor="let aux of graph.vertices; index as i">{{ graph.getDistanceBetween(vertex, aux) }}</td>
                 </tr>
             </table>
         </div>
