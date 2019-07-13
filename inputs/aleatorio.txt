@@ -1,8 +1,8 @@
-a / b
-a / d
-b / c
-b / d
-c / c
-c / d
-d / a
-c / d
+a 1 b
+a 1 d
+b 1 c
+b 1 d
+c 1 c
+c 1 d
+d 1 a
+c 1 d

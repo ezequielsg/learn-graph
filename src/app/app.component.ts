@@ -21,7 +21,7 @@ export class AppComponent implements OnInit {
     // aleatorio
     // this.recognize(`a - b\na - d\nb - c\nb - d\nc - c\nc - d`);
     // ciclo
-    this.recognize('a 5 b, b 4 c, c 7 d, d 10 a');
+    // this.recognize('a 5 b, b 4 c, c 7 d, d 10 a');
   }
 
   recognize(input: string) {

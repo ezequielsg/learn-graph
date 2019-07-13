@@ -5,6 +5,10 @@
 O intuito desse projeto é aprender Teoria dos Grafos programando os seus conceitos na prática.
 Dessa forma é muito mais fácil assimilar seus conceitos, aprender suas aplicações e tornar possível resolver problemas que de maneira habitual seria impossível.
 
+Na primeira tela da aplicação você escolhe um arquivo de entrada para o algoritmo e a entrada deve ser escriva da seguite forma:
+**Repita essa estrutura para cada aresta do grafo:** 
+VERTICE **A** **PESO** VERTICE **B** (**VÍRGULA** OU **\N**)
+
 Esses são alguns dos conceitos aplicados nesse projeto e a relação entre eles.
 
 ##### Ordem do grafo
